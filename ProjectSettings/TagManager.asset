@@ -7,6 +7,9 @@ TagManager:
   - Stage
   - Bullet
   - Enemy
+  - Friend
+  - PlayerCastle
+  - EnemyCastle
   layers:
   - Default
   - TransparentFX
@@ -14,12 +17,12 @@ TagManager:
   - 
   - Water
   - UI
-  - enemy
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Enemy
+  - Friend
+  - Player
+  - Tank
+  - PlayerCastle
+  - EnemyCastle
   - 
   - 
   - 
@@ -41,6 +44,15 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BackGround
+    uniqueID: 2497896843
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Stage
+    uniqueID: 145647897
+    locked: 0
+  - name: Charactor
+    uniqueID: 48675301
     locked: 0
