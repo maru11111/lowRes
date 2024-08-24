@@ -16,9 +16,12 @@ public class attack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (!GameObject.Find("Player"). GetComponent<takeDamage>().isStop)
         {
-            Instantiate(prefab, GameObject.Find("Player").transform.position, Quaternion.identity);
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                Instantiate(prefab, GameObject.Find("Player").transform.position, Quaternion.identity);
+            }
         }
 
 
