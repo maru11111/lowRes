@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -30,6 +29,9 @@ public class normalBullet : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //打つ前は当たり判定オフに
+        this.GetComponent<CircleCollider2D>().enabled = false;
+        //弾の向きをプレイヤーが向いている方向に
         changeDir();
     }
     void Update()
@@ -42,6 +44,12 @@ public class normalBullet : MonoBehaviour
         //発射前
         if(!isShot)
         {
+            //ダメージを受けたら攻撃解除
+            if (GameObject.Find("Player").GetComponent<takeDamage>().isStop)
+            {
+                destroy();  
+            }
+
             //レベル判定
             chargeTimer += Time.deltaTime;
             if (chargeTime3rd < chargeTimer)
@@ -86,6 +94,7 @@ public class normalBullet : MonoBehaviour
             {
                 Destroy(this.gameObject, 2);
                 flagDestroyOnce = true;
+                this.GetComponent<CircleCollider2D>().enabled = true;
             }
             shot();
         }
@@ -106,7 +115,15 @@ public class normalBullet : MonoBehaviour
         {
             direction = new(-1, 0);
         }
-        if (GameObject.Find("Player").GetComponent<move>().up)
+        //if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        //{
+        //    right = true;
+        //    this.GetComponent<SpriteRenderer>().flipX = true;
+        //}
+        //if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+        //{
+        //上ボタンを押しかつ左右どちらにも動いていなければ
+        if (GameObject.Find("Player").GetComponent<move>().up && !(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)))
         {
             direction = new(0, 1);
         }
@@ -124,7 +141,7 @@ public class normalBullet : MonoBehaviour
             transform.position = GameObject.Find("Player").transform.position + new Vector3(-1, 0, 0);
         }
         //上
-        if (GameObject.Find("Player").GetComponent<move>().up)
+        if (GameObject.Find("Player").GetComponent<move>().up && !(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)))
         {
             transform.position = GameObject.Find("Player").transform.position + new Vector3(0, 1, 0);
         }
@@ -138,20 +155,49 @@ public class normalBullet : MonoBehaviour
         if (baseEnemy != null)
         {
             //敵にダメージ
-            if (collision.gameObject.tag == "Enemy")
+            if (collision.gameObject.tag == "Enemy"||collision.gameObject.tag=="EnemyTank")
             {
-                baseEnemy.damage(power);
+                //衝突したオブジェクトの位置を取得
+                Vector2 collisionPos = collision.ClosestPoint(transform.position);
+                　
+                baseEnemy.damage(power, collisionPos);
+                
+                if (level == Level.first || level == Level.second)
+                {
+                    hitStop.hitStopInstance.startHitStop(0.03125f);
+                }
+                else if(level == Level.third)
+                {
+                    hitStop.hitStopInstance.startHitStop(0.0625f);
+                }
 
+                //自身を削除
+                destroy();
             }
         }
-        else
+
+        var castle = collision.gameObject.GetComponent<castle>();
+
+        if(castle != null)
         {
-            Debug.Log("collision.gameObject.GetComponent<baseEnemy>()がnullです");
+            //城にダメージ
+            if(collision.gameObject.tag == "EnemyCastle")
+            {
+                //衝突したオブジェクトの位置を取得
+                Vector2 collisionPos = collision.ClosestPoint(transform.position);
+
+                castle.damage(power, collisionPos);
+            }
+
+            //自身を削除
+            destroy();
         }
+
     }
 
     public void destroy()
     {
+        //貫通弾でなければ
         if (!isPenetrate)
         {
             Destroy(this.gameObject);
