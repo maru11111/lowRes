@@ -26,9 +26,12 @@ public class castle : MonoBehaviour
         }
     }
 
-    public void damage(int damage)
+    public void damage(int damage , Vector2 effectPos)
     {
         hp -= damage;
+
+        //衝突点にダメージエフェクト
+        GameObject.Find("EffectScript").GetComponent<damageEffect>().damageEffectPlay(effectPos);
     }
 
 }
