@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
@@ -10,7 +10,8 @@ public class enemyD : baseEnemy
     override protected void Start()
     {
         base.Start();
-        hp = 10;
+        maxHp = 10;
+        currentHp = maxHp;
         power = 3;
     }
 
@@ -20,7 +21,7 @@ public class enemyD : baseEnemy
         base.Update();
     }
 
-    public override void attack(GameObject obj)
+    public override void attack(GameObject obj, Vector2 effectPos)
     {
         if (isEnemy.Value)
         {

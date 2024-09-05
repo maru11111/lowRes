@@ -10,6 +10,9 @@ TagManager:
   - Friend
   - PlayerCastle
   - EnemyCastle
+  - FriendTank
+  - EnemyTank
+  - PiercingAttack
   layers:
   - Default
   - TransparentFX
@@ -23,13 +26,13 @@ TagManager:
   - Tank
   - PlayerCastle
   - EnemyCastle
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - FriendPhysics
+  - EnemyPhysics
+  - TankFriendPhysics
+  - TankEnemyPhysics
+  - EnemySearchCollider
+  - FriendSearchCollider
+  - PlayerPhysics
   - 
   - 
   - 
@@ -53,6 +56,15 @@ TagManager:
   - name: Stage
     uniqueID: 145647897
     locked: 0
-  - name: Charactor
+  - name: Enemy
     uniqueID: 48675301
+    locked: 0
+  - name: Player
+    uniqueID: 3886916831
+    locked: 0
+  - name: Effect
+    uniqueID: 2039262773
+    locked: 0
+  - name: AttackEffect
+    uniqueID: 1916814025
     locked: 0
