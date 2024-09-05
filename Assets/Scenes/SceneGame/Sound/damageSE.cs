@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class damageSE : MonoBehaviour
 {
-    private AudioSource audioSource;
+    public AudioSource audioSource;
     public AudioClip sound;
     bool flagPlayOnce=false;
 
     // Start is called before the first frame update
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -21,6 +20,7 @@ public class damageSE : MonoBehaviour
         {
             audioSource.PlayOneShot(sound);
             flagPlayOnce = true;
+            
         }
     }
 }
