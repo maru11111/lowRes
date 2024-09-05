@@ -14,14 +14,11 @@ public class hpBar : MonoBehaviour
         slider = this.GetComponent<Slider>();
         var castle = GetComponentInParent<castle>();
         slider.maxValue = castle.hp;
-        Debug.Log("maxValue"+slider.maxValue);
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("hp" + GetComponentInParent<castle>().hp);
-
         //hpを取得
         castleHp = GetComponentInParent<castle>().hp;
 
