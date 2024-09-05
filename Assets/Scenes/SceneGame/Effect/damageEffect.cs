@@ -10,6 +10,6 @@ public class damageEffect : MonoBehaviour
     {
         GameObject explosion = Instantiate(prefab, pos, Quaternion.identity);
 
-        Destroy(explosion, 1f);
+        Destroy(explosion, 0.5f);
     }
 }
