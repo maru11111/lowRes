@@ -40,6 +40,8 @@ public class dragon : baseEnemy
             //colliderのレイヤーを変更
             transform.Find("AttackCollider1").gameObject.layer = LayerMask.NameToLayer("Friend");
             transform.Find("AttackCollider2").gameObject.layer = LayerMask.NameToLayer("Friend");
+            transform.Find("AttackCollider1").gameObject.tag = ("PiercingAttack");
+            transform.Find("AttackCollider2").gameObject.tag = ("PiercingAttack");
             transform.Find("SearchCollider").gameObject.layer = LayerMask.NameToLayer("FriendSearchCollider");
             transform.Find("SearchColliderForAttack").gameObject.layer = LayerMask.NameToLayer("FriendSearchCollider");
             transform.Find("PhysicsCollider").gameObject.layer = LayerMask.NameToLayer("FriendPhysics");
@@ -62,8 +64,8 @@ public class dragon : baseEnemy
 
         if (attackInterval <= timer)
         {
-            //敵が射程圏内かつ歩き中でない
-            if (withinAttackRange && !anim.GetCurrentAnimatorStateInfo(0).IsName("Walk"))
+            //敵が射程圏内かつ歩き中でないかつ床にいる
+            if (withinAttackRange && !anim.GetCurrentAnimatorStateInfo(0).IsName("Walk") && flagOnFloor)
             {
                 //敵の方向を向く
                 setDirection();
@@ -86,6 +88,52 @@ public class dragon : baseEnemy
         //攻撃用の当たり判定をオンに(アニメーションから呼び出す用
         attackCol1.OffCollider();
         attackCol2.OffCollider();
+    }
+
+    public override void attack(GameObject obj, Vector2 effectPos)
+    {
+        //自身が敵であれば
+        if (isEnemy.Value)
+        {
+            //プレイヤー城にダメージ
+            if (obj.CompareTag("PlayerCastle"))
+            {
+                playerCastleScript.damage(power, effectPos);
+            }
+            //プレイヤーにダメージ
+            if (obj.CompareTag("Player"))
+            {
+                player.damage(power, effectPos, this.gameObject);
+            }
+            //眷属にダメージ
+            if (obj.CompareTag("Friend") || obj.CompareTag("FriendTank"))
+            {
+                var baseEnemy = obj.GetComponent<baseEnemy>();
+                if (baseEnemy != null)
+                {
+                    Debug.Log(obj + "に" + power + "damage");
+                    baseEnemy.damage(power, effectPos, attackCol1.gameObject);
+                }
+            }
+        }
+        //自身が眷属であれば
+        else if (!isEnemy.Value)
+        {
+            //敵城にダメージ
+            if (obj.CompareTag("EnemyCastle"))
+            {
+                enemyCastleScript.damage(power, effectPos);
+            }
+            //敵にダメージ
+            if (obj.CompareTag("Enemy") || obj.CompareTag("EnemyTank"))
+            {
+                var baseEnemy = obj.GetComponent<baseEnemy>();
+                if (baseEnemy != null)
+                {
+                    baseEnemy.damage(power, effectPos, attackCol1.gameObject);
+                }
+            }
+        }
     }
 
     public override void move()

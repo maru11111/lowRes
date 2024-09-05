@@ -8,19 +8,21 @@ using UnityEngine;
 public class golem : baseEnemy 
 {
 
-    Animator anim;
+    public collider attackCol;
 
     // Start is called before the first frame update
     override protected void Start()
     {
-        base.Start();
-        hp = 100;
+        maxHp = 100;
         power = 1;
         attackInterval = 3;
 
+        attackCol = GetComponentInChildren<collider>();
+
         if (isEnemy.Value)
         {
-
+            //オブジェクトのタグを変更
+            gameObject.tag = "EnemyTank";
         }
         //眷属の場合
         else if (!isEnemy.Value)
@@ -28,23 +30,19 @@ public class golem : baseEnemy
             //進行方向を反転
             this.transform.localScale = new Vector3(-this.transform.localScale.x, this.transform.localScale.y, this.transform.localScale.z);
 
+            //オブジェクトのタグとレイヤーを変更
+            gameObject.layer = LayerMask.NameToLayer("Friend");
+            gameObject.tag = "FriendTank";
             //colliderのタグとレイヤーを変更
-            gameObject.transform.Find("AttackCollider").gameObject.layer = LayerMask.NameToLayer("Friend");
-            gameObject.transform.Find("AttackCollider").gameObject.tag = "Friend";
+            transform.Find("AttackCollider").gameObject.layer = LayerMask.NameToLayer("Friend");
+            transform.Find("PhysicsCollider").gameObject.layer = LayerMask.NameToLayer("TankFriendPhysics");
         }
         else
         {
             Debug.Log("isEnemyがnullです");
         }
 
-            //anim = this.GetComponent<Animator>();
-        //  anim.SetBool("Stand", true);
-        /*
-        if (anim.GetBool("Stand") == true)
-        {
-            Debug.Log("ああああああああああああああああ");
-        }
-        */
+        base.Start();
     }
 
     // Update is called once per frame
@@ -56,26 +54,22 @@ public class golem : baseEnemy
     private void attackColliderOn()
     {
         //攻撃用の当たり判定をオンに(アニメーションから呼び出す用
-        this.GetComponentInChildren<collider>().OnCollider();
+        attackCol.OnCollider();
     }
     private void attackColliderOff()
     {
         //攻撃用の当たり判定をオンに(アニメーションから呼び出す用
-        this.GetComponentInChildren<collider>().OffCollider();
+        attackCol.OffCollider();
     }
-
-
-    public override void attack(GameObject obj)
+    public override void attack(GameObject obj, Vector2 effectPos)
     {
         //自身が敵であれば
         if (isEnemy.Value)
         {
-
-
             //プレイヤー城にダメージ
-            if (obj.tag == "PlayerCastle")
+            if (obj.CompareTag("PlayerCastle"))
             {
-                obj.GetComponent<castle>().damage(power);
+                playerCastleScript.damage(power, effectPos);
             }
             else
             {
@@ -86,9 +80,9 @@ public class golem : baseEnemy
         else if(!isEnemy.Value)
         {
             //敵城にダメージ
-            if (obj.tag == "EnemyCastle")
+            if (obj.CompareTag("EnemyCastle"))
             {
-                obj.GetComponent<castle>().damage(power);
+                enemyCastleScript.damage(power, effectPos);
             }
             else
             {
@@ -110,7 +104,7 @@ public class golem : baseEnemy
         changeAttackMotion();
 
         //kinematicにしてアニメーションで位置を操作できるようにする
-        this.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+        rigid.bodyType = RigidbodyType2D.Kinematic;
 
     }
     
@@ -119,35 +113,35 @@ public class golem : baseEnemy
         attacking = false;
 
         //dynamicに戻す
-        this.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+        rigid.bodyType = RigidbodyType2D.Dynamic;
   
     }
 
     private void changeAttackMotion()
     {
-        this.GetComponent<Animator>().SetBool("Attack", true);
-        this.GetComponent<Animator>().SetBool("Stand", false);
-        this.GetComponent<Animator>().SetBool("Walk", false);
+        anim.SetBool("Attack", true);
+        anim.SetBool("Stand", false);
+        anim.SetBool("Walk", false);
     }
     private void changeWalkMotion()
     {
-        this.GetComponent<Animator>().SetBool("Attack", false);
-        this.GetComponent<Animator>().SetBool("Stand", false);
-        this.GetComponent<Animator>().SetBool("Walk", true);
+        anim.SetBool("Attack", false);
+        anim.SetBool("Stand", false);
+        anim.SetBool("Walk", true);
     }
     private void changeStandMotion()
     {
-        this.GetComponent<Animator>().SetBool("Attack", false);
-        this.GetComponent<Animator>().SetBool("Stand", true);
-        this.GetComponent<Animator>().SetBool("Walk", false);
+        anim.SetBool("Attack", false);
+        anim.SetBool("Stand", true);
+        anim.SetBool("Walk", false);
     }
 
     public override void move()
     {
         //眷属かどうかで変化しない
 
-        //攻撃状態に移行していなければ歩く
-        if (!moveAttack)
+        //攻撃状態に移行していないかつ床にいれば歩く
+        if (!moveAttack && flagOnFloor)
         {
             changeWalkMotion();
         }
@@ -161,7 +155,7 @@ public class golem : baseEnemy
             {
 
                 //攻撃が終了していれば
-                if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Attack") && this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)
+                if (anim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)
                 {
                     //攻撃終了処理
                     finishAttack();
@@ -185,15 +179,16 @@ public class golem : baseEnemy
         }
     }
 
-     override protected void OnCollisionEnter2D(Collision2D collision)
+     override protected void OnTriggerStay2D(Collider2D collision)
     {
-        base.OnCollisionEnter2D(collision);
+        base.OnTriggerStay2D(collision);
 
+        //攻撃処理
         //自身が敵であれば
         if (isEnemy.Value)
         {
             //当たったオブジェクトがプレイヤー城かつ攻撃状態に移行していなければ
-            if (collision.gameObject.tag == "PlayerCastle" && !moveAttack)
+            if (collision.gameObject.CompareTag("PlayerCastle") && !moveAttack)
             {
                 //攻撃移行初期処理
                 Debug.Log("プレイヤー城攻撃スタート");
@@ -203,10 +198,11 @@ public class golem : baseEnemy
                 attacking = true;
             }
         }
+        //眷属であれば
         else if(!isEnemy.Value)
         {
             //当たったオブジェクトが敵城かつ攻撃状態に移行していなければ
-            if (collision.gameObject.tag == "EnemyCastle" && !moveAttack)
+            if (collision.gameObject.CompareTag("EnemyCastle") && !moveAttack)
             {
                 //攻撃移行初期処理
                 Debug.Log("敵城攻撃スタート");

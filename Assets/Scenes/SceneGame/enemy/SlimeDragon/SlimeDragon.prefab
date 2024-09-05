@@ -205,7 +205,7 @@ GameObject:
   - component: {fileID: 7940896936911598556}
   m_Layer: 6
   m_Name: AttackCollider2
-  m_TagString: Enemy
+  m_TagString: PiercingAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -651,7 +651,7 @@ GameObject:
   - component: {fileID: 4682654058292525771}
   m_Layer: 6
   m_Name: AttackCollider1
-  m_TagString: Enemy
+  m_TagString: PiercingAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
