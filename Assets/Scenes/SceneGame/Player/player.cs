@@ -22,7 +22,6 @@ public class player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("currentHp = " + currentHp);
         if (currentHp <= 0)
         {
             Destroy(this.gameObject);
