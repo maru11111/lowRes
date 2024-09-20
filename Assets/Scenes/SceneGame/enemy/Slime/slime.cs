@@ -11,9 +11,41 @@ public class slime : baseEnemy
     // Start is called before the first frame update
     override protected void Start()
     {
-        maxHp = 50;
-        power = 1;
+        if (isEnemy.Value) 
+        {
+            maxHp = 60;
+            power = 20;
+        }
+        else
+        {
+            maxHp = 120;
+            power = 40;
+
+            //スキル補正
+            switch (SaveDataManager.data.friendStrengthenLevel)
+            {
+                case 0:
+                    //変化なし
+                    break;
+
+                case 1:
+                    maxHp += 20;
+                    power += 10;
+                    break;
+
+                case 2:
+                    maxHp += 60;
+                    power += 20;
+                    break;
+
+                case 3:
+                    maxHp += 80;
+                    power += 30;
+                    break;
+            }
+        }   
         walkInterval = 1f;
+        friendType = FriendType.slime;
         attackCol = GetComponentInChildren<collider>();
 
         if (isEnemy.Value)
@@ -128,6 +160,12 @@ public class slime : baseEnemy
             {
                 rigid.bodyType = RigidbodyType2D.Dynamic;
             }
+        }
+
+        //壁にぶつかったら止まる
+        if (collision.CompareTag("Wall"))
+        {
+            rigid.bodyType = RigidbodyType2D.Dynamic;
         }
     }
 }
