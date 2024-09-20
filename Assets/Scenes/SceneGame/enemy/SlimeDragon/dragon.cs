@@ -10,10 +10,42 @@ public class dragon : baseEnemy
     // Start is called before the first frame update
     override protected void Start()
     {
-        maxHp = 50;
-        power = 1;
-        attackInterval = 2;
+        if (isEnemy.Value)
+        {
+            maxHp = 120;
+            power = 50;
+        }
+        else
+        {
+            maxHp = 180;
+            power = 75;
+
+            //スキル補正
+            switch (SaveDataManager.data.friendStrengthenLevel)
+            {
+                case 0:
+                    //変化なし
+                    break;
+
+                case 1:
+                    maxHp += 20;
+                    power += 10;
+                    break;
+
+                case 2:
+                    maxHp += 60;
+                    power += 20;
+                    break;
+
+                case 3:
+                    maxHp += 100;
+                    power += 30;
+                    break;
+            }
+        }
+        attackInterval = 4;
         walkInterval = 1;
+        friendType = FriendType.dragon;
         attackCol1 = transform.Find("AttackCollider1").GetComponent<collider>();
         attackCol2 = transform.Find("AttackCollider2").GetComponent<collider>();
 
@@ -163,5 +195,40 @@ public class dragon : baseEnemy
                 }
             }
         }
+    }
+
+    override public void destroy()
+    {
+        //自身が敵だった場合
+        if (isEnemy.Value)
+        {
+            //レベル1では確定ドロップ
+            if (CommonParam.selectStageLevel == CommonParam.StageLevel.Level1) 
+            {
+                //眷属アイテム作成
+                GameObject item = Instantiate(friendItemPrefab, transform.position, Quaternion.identity);
+                item.GetComponent<friendItem>().setParam(friendType);
+            }
+            else
+            {
+                //一定確率で眷属になる
+                int ProbabilityNum = Random.Range(0, 100);
+                Debug.Log(player.getProbability() + "以下であれば眷属 num : " + ProbabilityNum);
+                //probability(％)の確率で
+                if (ProbabilityNum < player.getProbability())
+                {
+                    //眷属アイテム作成
+                    GameObject item = Instantiate(friendItemPrefab, transform.position, Quaternion.identity);
+                    item.GetComponent<friendItem>().setParam(friendType);
+                }
+                //はずれ
+                else
+                {
+                    //眷属にならない
+                }
+            }
+
+        }
+        Destroy(this.gameObject);
     }
 }
