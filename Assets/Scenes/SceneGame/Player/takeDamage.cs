@@ -7,6 +7,7 @@ public class takeDamage : MonoBehaviour
 {
     private Vector2 knockBackSpeed = new Vector2(10f, 3f);
     private Animator animator;
+    public player playerScript;
     private float knockBackTime = 0.1f;
     private float stopTime = 1f;
     private float timer=0;
@@ -24,32 +25,36 @@ public class takeDamage : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-
-        if (isKnockBack)
+        if (!playerScript.isDead)
         {
-            knockBack();
-        }
-        if (isStop)
-        {
-            timer2 += Time.deltaTime;
-
-            if (stopTime <= timer2)
+            if (isKnockBack)
             {
-                isStop = false;
-                timer2 = 0;
-                animator.SetBool("TakeDamage", false);
+                knockBack();
+            }
+            if (isStop)
+            {
+                timer2 += Time.deltaTime;
+
+                if (stopTime <= timer2)
+                {
+                    isStop = false;
+                    timer2 = 0;
+                    animator.SetBool("TakeDamage", false);
+                }
             }
         }
     }
 
     public void startKnockBack(int dir)
     {
-        direction = dir;
-        isKnockBack=true;
-        isStop = true;
-        animator.SetBool("TakeDamage", true);
-        animator.SetBool("Dash", false);
+        if (!playerScript.isDead)
+        {
+            direction = dir;
+            isKnockBack = true;
+            isStop = true;
+            animator.SetBool("TakeDamage", true);
+            animator.SetBool("Dash", false);
+        }
     }
 
     private void knockBack() 
