@@ -11,6 +11,7 @@ public class move : MonoBehaviour
     public rolling rollingScript;
     public takeDamage takeDamageScript;
     public pause pauseScript;
+    public player playerScript;
     private float speed = 3.5f;
     private float currentSpeed;
     public bool right = false;
@@ -27,7 +28,7 @@ public class move : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!takeDamageScript.isStop && !rollingScript.isRolling && !pauseScript.isPause)
+        if (!takeDamageScript.isStop && !rollingScript.isRolling && !pauseScript.isPause && !playerScript.isDead && !playerScript.isGameSet)
         {
 
             //移動速度を設定
@@ -83,7 +84,7 @@ public class move : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!GameObject.Find("Player").GetComponent<takeDamage>().isStop && !rollingScript.isRolling)
+        if (!GameObject.Find("Player").GetComponent<takeDamage>().isStop && !rollingScript.isRolling && !playerScript.isDead && !playerScript.isGameSet)
         {
             //移動
             player.velocity = (new Vector2(currentSpeed, player.velocity.y));
