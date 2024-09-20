@@ -23,10 +23,4 @@ public class friendItemManager : MonoBehaviour
         //格納失敗
         return false;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
