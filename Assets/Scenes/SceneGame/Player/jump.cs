@@ -8,6 +8,7 @@ public class jump : MonoBehaviour
     public rolling rollingScript;
     public takeDamage takeDamageScript;
     public pause pauseScript;
+    public player playerScript;
     private float jumpSpeed = 220f;
     private bool onFloor;
     public Animator anim;
@@ -26,7 +27,7 @@ public class jump : MonoBehaviour
     {
 
         //ダメージ硬直中でないかつローリング中でなければ
-        if (!takeDamageScript.isStop && !rollingScript.isRolling && !pauseScript.isPause)
+        if (!takeDamageScript.isStop && !rollingScript.isRolling && !pauseScript.isPause && !playerScript.isDead && !playerScript.isGameSet)
         {
             Debug.Log("Onfloor"+ onFloor);
 
@@ -56,7 +57,7 @@ public class jump : MonoBehaviour
             }
             else
             {
-                if (Input.GetKeyDown(KeyCode.A))
+                if (Input.GetKeyDown(KeyCode.A) && SaveDataManager.data.onDoubleJump == 1)
                 {
                     //二段ジャンプ回数内なら
                     if (jumpCount < maxJump)
