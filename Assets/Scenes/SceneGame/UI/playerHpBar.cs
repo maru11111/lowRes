@@ -30,7 +30,7 @@ public class playerHpBar : MonoBehaviour
     {
         if (player != null)
         {
-            maxHp = player.GetComponent<player>().maxHp;
+            maxHp = player.GetComponent<player>().getMaxHp();
             currentHp = player.GetComponent<player>().currentHp;
         }
         else
