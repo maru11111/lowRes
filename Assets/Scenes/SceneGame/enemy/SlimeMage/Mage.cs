@@ -5,15 +5,52 @@ using UnityEngine;
 
 public class Mage : baseEnemy
 {
-    private float speed=1;
+    private float speed = 1;
     public GameObject iceLancePrefab;
+    public List<GameObject> iceLances;
+    public int rancePower;
 
     // Start is called before the first frame update
     override protected void Start()
     {
-        maxHp = 50;
-        power = 1;
+        if (isEnemy.Value)
+        {
+            maxHp = 16;
+            power = 1;
+            rancePower = 20;
+        }
+        else
+        {
+            maxHp = 21;
+            power = 1;
+            rancePower = 15;
+
+            //スキル補正
+            switch (SaveDataManager.data.friendStrengthenLevel)
+            {
+                case 0:
+                    //変化なし
+                    break;
+
+                case 1:
+                    maxHp += 20;
+                    rancePower += 5;
+                    break;
+
+                case 2:
+                    maxHp += 30;
+                    rancePower += 10;
+                    break;
+
+                case 3:
+                    maxHp += 40;
+                    rancePower += 15;
+                    break;
+            }
+        }
+
         attackInterval = 5;
+        friendType = FriendType.mage;
 
         if (isEnemy.Value)
         {
@@ -67,7 +104,7 @@ public class Mage : baseEnemy
     }
     private IEnumerator startCreateLance()
     {
-        createLance(transform.position + new Vector3(-1f,0f,0f), 1f);
+        createLance(transform.position + new Vector3(-1f, 0f, 0f), 1f);
 
         yield return new WaitForSeconds(0.2f);
 
@@ -80,9 +117,10 @@ public class Mage : baseEnemy
     private void createLance(Vector3 pos, float time)
     {
         GameObject lance;
-        
+
         lance = Instantiate(iceLancePrefab, pos, Quaternion.identity);
-        lance.gameObject.GetComponent<iceLance>().setParam(target, time, isEnemy.Value);
+        iceLances.Add(lance);
+        lance.gameObject.GetComponent<iceLance>().setParam(target, time, isEnemy.Value, rancePower);
         if (!isEnemy.Value)
         {
             lance.layer = LayerMask.NameToLayer("Friend");
@@ -93,8 +131,8 @@ public class Mage : baseEnemy
     public override void move()
     {
         //上下にふわふわ
-        transform.position += new Vector3(0, 0.2f*Time.deltaTime * Mathf.Sin(Time.time), 0);
-        
+        transform.position += new Vector3(0, 0.2f * Time.deltaTime * Mathf.Sin(Time.time), 0);
+
         Debug.Log("within" + withinAttackRange);
         //敵が射程圏内なら
         if (withinAttackRange)
@@ -124,6 +162,17 @@ public class Mage : baseEnemy
             transform.position += new Vector3(-speed * Time.deltaTime, 0, 0);
 
         }
-      
+
+    }
+
+    //死んだとき
+    public override void destroy()
+    {
+        //槍があったら消す
+        for(int i = 0; i < iceLances.Count; i++) {
+            Destroy(iceLances[i]);
+        }
+
+        base.destroy();
     }
 }
