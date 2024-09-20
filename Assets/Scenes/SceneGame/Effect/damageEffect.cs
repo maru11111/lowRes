@@ -12,4 +12,13 @@ public class damageEffect : MonoBehaviour
 
         Destroy(explosion, 0.5f);
     }
+
+    public void damageEffectPlay(Vector2 pos, float volume)
+    {
+        GameObject explosion = Instantiate(prefab, pos, Quaternion.identity);
+
+        explosion.transform.Find("DamageSE").GetComponent<damageSE>().audioSource.volume = volume;
+
+        Destroy(explosion, 0.5f);
+    }
 }
