@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public enum FriendType
 {
@@ -27,10 +28,19 @@ public class friendItemBox : MonoBehaviour
     public bool isSelected;
     public bool friendIsEnabled;
     public bool existItem;
+    private bool friendSummoned=false;
     private Vector2 summonPos;
     public FriendType currentFriendType = FriendType.notExist;
     private GameObject friend;
-    private baseEnemy baseEnemyScript;
+    public baseEnemy baseEnemyScript;
+    public GameObject canvas;
+    public InputActionReference submitAction;
+
+    private float spawnPosYslime = -0.5f;
+    private float spawnPosYshield = -0.5f;
+    private float spawnPosYgolem = -0.5f;
+    private float spawnPosYmage = -1.95f;
+    private float spawnPosYdragon = -0.5f;
 
     public enum ImageType
     {
@@ -66,9 +76,42 @@ public class friendItemBox : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        friendNullCheck();
         checkButtonFocused();
         setCurrentImage();
         changeImage(currentImageType);
+    }
+
+    private void friendNullCheck()
+    {
+        //眷属が死んでいたら
+        if(friendIsEnabled && friendSummoned && friend == null)
+        {
+            //アイテムボックスを初期化
+            existItem = false;
+            friendIsEnabled = false;
+            friendSummoned = false;
+            //hpバー非表示
+            canvas.SetActive(false);
+        }
+    }
+
+    public void deleteFrind()
+    {
+        if (existItem)
+        {
+            //アイテムボックスを初期化
+            existItem = false;
+            friendIsEnabled = false;
+            friendSummoned = false;
+            //hpバー非表示
+            canvas.SetActive(false);
+            //生きていたら殺す
+            if (friend != null)
+            {
+                Destroy(friend);
+            }
+        }
     }
 
     //ボタンが選択(フォーカス)されているかどうか調べる
@@ -93,21 +136,65 @@ public class friendItemBox : MonoBehaviour
     //ボタンが押された時の処理
     public void buttonPressed()
     {
-        if (existItem)
+        //召喚キー
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            //ポーズ中なら
-            if (pauseScript.isPause)
+            //まだ眷属が召喚されていないなら
+            if (!friendIsEnabled)
             {
-                //ポーズ解除
-                pauseScript.pauseOff();
-                //アイテムを使う
-                useItem();
+                Debug.Log("spaceキー");
+                if (existItem)
+                {
+                    //ポーズ中なら
+                    if (pauseScript.isPause)
+                    {
+                        pauseScript.forwardAudio2.Play();
+                        //ポーズ解除
+                        pauseScript.pauseOff();
+                        //アイテムを使う
+                        useItem();
+                    }
+                    //ポーズ中でない
+                    else
+                    {
+                        pauseScript.forwardAudio2.Play();
+                        //そのままアイテムを使う
+                        useItem();
+                    }
+                }
             }
-            //ポーズ中でない
+            //すでに召喚されていたら
             else
             {
-                //そのままアイテムを使う
-                useItem();
+                pauseScript.failAudio.Play();
+            }
+        }
+
+
+        //削除キー
+        if (Input.GetKeyDown(KeyCode.V)){
+            Debug.Log("vキー");
+            if (existItem)
+            {
+                //ポーズ中なら
+                if (pauseScript.isPause)
+                {
+                    pauseScript.forwardAudio2.Play();
+                    Debug.Log("Vかつポーズ中v");
+                    //警告画面に遷移
+                    pauseScript.prevStateType = pauseScript.currentStateType;
+                    pauseScript.currentStateType = pause.StateType.caution;
+                    EventSystem.current.SetSelectedGameObject(pauseScript.cautionFirstButton);
+                    pauseScript.prevFocusButtonForSE = pauseScript.cautionFirstButton;
+                    pauseScript.cautionCanvas.SetActive(true);
+                    pauseScript.setDeleteBox(this);
+                }
+                else
+                {
+                    pauseScript.backAudio.Play();
+                    //そのまま削除
+                    deleteFrind();
+                }
             }
         }
     }
@@ -120,14 +207,18 @@ public class friendItemBox : MonoBehaviour
 
     private void useItem()
     {
-        //出現位置を決定
-        setSummonPos();
-        //魔法陣作成
-        magicCircle.MagicCirclePlay(summonPos);
-        
-        friendIsEnabled = true;
-        //魔法陣が出てから召喚
-        StartCoroutine(delaySummonForMagicCircle());
+        //まだ召喚されていないなら
+        if (!friendIsEnabled)
+        {
+            //出現位置を決定
+            setSummonPos();
+            //魔法陣作成
+            magicCircle.MagicCirclePlay(summonPos);
+
+            friendIsEnabled = true;
+            //魔法陣が出てから召喚
+            StartCoroutine(delaySummonForMagicCircle());
+        }
     }
 
     private IEnumerator delaySummonForMagicCircle()
@@ -141,6 +232,9 @@ public class friendItemBox : MonoBehaviour
         }
         baseEnemyScript = friend.GetComponent<baseEnemy>();
         baseEnemyScript.isEnemy = false;
+        friendSummoned = true;
+        //hpバー表示
+        canvas.SetActive(true);
     }
 
 
@@ -149,27 +243,21 @@ public class friendItemBox : MonoBehaviour
         switch (currentFriendType)
         {
             case FriendType.slime:
-                summonPos = new Vector2(playerTransform.position.x, 0);
+                summonPos = new Vector2(playerTransform.position.x, spawnPosYslime);
                 break;
             case FriendType.shield:
-                summonPos = new Vector2(playerTransform.position.x, 0);
+                summonPos = new Vector2(playerTransform.position.x, spawnPosYshield);
                 break;
             case FriendType.golem:
-                summonPos = new Vector2(playerTransform.position.x, 0);
+                summonPos = new Vector2(playerTransform.position.x, spawnPosYgolem);
                 break;
             case FriendType.mage:
-                summonPos = new Vector2(playerTransform.position.x, 0);
+                summonPos = new Vector2(playerTransform.position.x, spawnPosYmage);
                 break;
             case FriendType.dragon:
-                summonPos = new Vector2(playerTransform.position.x, 0);
+                summonPos = new Vector2(playerTransform.position.x, spawnPosYdragon);
                 break;
         }
-    }
-
-    public void friendIsDead()
-    {
-        existItem = false;
-        currentFriendType = FriendType.notExist;
     }
 
     public void setCurrentImage()
