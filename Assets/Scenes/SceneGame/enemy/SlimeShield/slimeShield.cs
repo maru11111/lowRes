@@ -12,10 +12,42 @@ public class shield : baseEnemy
     // Start is called before the first frame update
     override protected void Start()
     {
-        maxHp = 50;
-        power = 1;
+        if (isEnemy.Value)
+        {
+            maxHp = 60;
+            power = 15;
+        }
+        else
+        {
+            maxHp = 180;
+            power = 26;
+
+            //スキル補正
+            switch (SaveDataManager.data.friendStrengthenLevel)
+            {
+                case 0:
+                    //変化なし
+                    break;
+
+                case 1:
+                    maxHp += 40;
+                    power += 10;
+                    break;
+
+                case 2:
+                    maxHp += 80;
+                    power += 20;
+                    break;
+
+                case 3:
+                    maxHp += 120;
+                    power += 30;
+                    break;
+            }
+        }
         attackInterval = 2;
         walkInterval = 2;
+        friendType = FriendType.shield;
         shieldCol = transform.Find("ShieldCollider").GetComponent<collider>();
         attackCol = transform.Find("AttackCollider1").GetComponent<collider>();
 
@@ -136,7 +168,7 @@ public class shield : baseEnemy
             //貫通攻撃の場合
             if (other.CompareTag("PiercingAttack"))
             {
-                //Debug.Log("貫通攻撃！");
+                Debug.Log("貫通攻撃！");
                 //ダメージを受ける
                 currentHp -= damage;
                 //衝突点にダメージエフェクト
@@ -145,7 +177,7 @@ public class shield : baseEnemy
             //貫通攻撃でない場合
             else
             {
-                //Debug.Log("NOT貫通攻撃！ tag: "+other.tag +" obj: "+other);
+                Debug.Log("NOT貫通攻撃！ tag: "+other.tag +" obj: "+other);
                 if (transform.position.x < other.transform.position.x && 0 < transform.localScale.x)
                 {
                     //ガード
@@ -182,6 +214,34 @@ public class shield : baseEnemy
             currentHp -= damage;
             //衝突点にダメージエフェクト
             damageEffect.damageEffectPlay(effectPos);
+        }
+    }
+    override protected void OnTriggerStay2D(Collider2D collision)
+    {
+        //プレイヤーが触れたらプレイヤーにダメージ
+        base.OnTriggerStay2D(collision);
+
+        if (isEnemy.Value)
+        {
+            //城にぶつかったらdynamicに戻す
+            if (collision.CompareTag("PlayerCastle"))
+            {
+                rigid.bodyType = RigidbodyType2D.Dynamic;
+            }
+        }
+        else
+        {
+            //城にぶつかったらdynamicに戻す
+            if (collision.CompareTag("EnemyCastle"))
+            {
+                rigid.bodyType = RigidbodyType2D.Dynamic;
+            }
+        }
+
+        //壁にぶつかったら止まる
+        if (collision.CompareTag("Wall"))
+        {
+            rigid.bodyType = RigidbodyType2D.Dynamic;
         }
     }
 }
