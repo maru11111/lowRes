@@ -3,7 +3,13 @@ guid: 57cf47c729452d4458a3219255e9a943
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - target: {instanceID: 0}
+  - damageEffect: {instanceID: 0}
+  - player: {instanceID: 0}
+  - rigid: {instanceID: 0}
+  - anim: {instanceID: 0}
+  - friendItemPrefab: {fileID: 7990694061593558116, guid: 1e227434e8035a848a1c5d29cc75f97c, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

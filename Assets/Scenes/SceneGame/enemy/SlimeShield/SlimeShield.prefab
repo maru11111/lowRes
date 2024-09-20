@@ -505,7 +505,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 48675301
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -1785174022, guid: 3455276466b11de43a266e6824bf9a88, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -632,6 +632,9 @@ MonoBehaviour:
   player: {fileID: 0}
   rigid: {fileID: 0}
   anim: {fileID: 0}
+  friendItemPrefab: {fileID: 7990694061593558116, guid: 1e227434e8035a848a1c5d29cc75f97c, type: 3}
+  friendType: 0
+  physicsCol: {fileID: 7193771112688920959}
   shieldCol: {fileID: 0}
   attackCol: {fileID: 0}
 --- !u!1 &5592002729648740860
@@ -942,7 +945,7 @@ RectTransform:
   m_GameObject: {fileID: 7757049125151838108}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.61, z: 0.61}
+  m_LocalScale: {x: 0.75, y: 1, z: 0.61}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1631619228117504558}

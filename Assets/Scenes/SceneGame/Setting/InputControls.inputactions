@@ -49,7 +49,7 @@
                     "name": "2D Vector",
                     "id": "173580ec-c213-4755-8a19-443743013880",
                     "path": "2DVector",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "",
                     "action": "Navigate",
@@ -110,6 +110,17 @@
                     "action": "Submit",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "09c02ef7-db73-439e-b7b8-3ea9e58d2298",
+                    "path": "<Keyboard>/v",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Submit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -132,7 +143,7 @@
                     "id": "869f28e3-a9f7-41b3-8a2a-2e603704a954",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press",
                     "initialStateCheck": false
                 },
                 {
@@ -150,7 +161,7 @@
                     "name": "2D Vector",
                     "id": "229855d1-2662-474f-a2a7-02da26d63929",
                     "path": "2DVector",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "",
                     "action": "Navigate",
@@ -160,7 +171,7 @@
                 {
                     "name": "up",
                     "id": "1f9c096f-c94f-4f0e-b7ff-da0f42bf23f3",
-                    "path": "",
+                    "path": "<Keyboard>/upArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -171,7 +182,7 @@
                 {
                     "name": "down",
                     "id": "43f8db42-b6d8-4539-8c98-b5d620d8690a",
-                    "path": "",
+                    "path": "<Keyboard>/downArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -203,8 +214,19 @@
                 },
                 {
                     "name": "",
-                    "id": "2bff3f37-c441-408f-9491-41bdd66ec81d",
-                    "path": "<Keyboard>/a",
+                    "id": "d0140e81-377b-4be7-b825-e94c1927f988",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6f36eb3e-b3a7-4dae-977c-c8be96f9318d",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -214,23 +236,40 @@
                 },
                 {
                     "name": "",
-                    "id": "224bb02a-f1ec-47e7-b077-67874e18179b",
-                    "path": "<Keyboard>/s",
+                    "id": "1b804130-1391-46d6-8980-01b588422266",
+                    "path": "<Keyboard>/v",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Cancel",
+                    "action": "Submit",
                     "isComposite": false,
                     "isPartOfComposite": false
-                },
+                }
+            ]
+        },
+        {
+            "name": "NoAct",
+            "id": "7388e80a-4963-449c-8ff4-ccc670852c81",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "2709d6ef-36e8-4fc4-8c63-e9cbe9011659",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
                 {
                     "name": "",
-                    "id": "d0140e81-377b-4be7-b825-e94c1927f988",
-                    "path": "<Keyboard>/shift",
+                    "id": "2b00dc75-bc19-4b77-82b1-f2c9022480a5",
+                    "path": "",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Cancel",
+                    "action": "New action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

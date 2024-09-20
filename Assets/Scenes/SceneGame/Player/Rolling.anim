@@ -92,6 +92,13 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
+  - time: 0
+    functionName: changeLayerToRolling
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.56666666
     functionName: onCollider
     data: 
@@ -101,6 +108,13 @@ AnimationClip:
     messageOptions: 0
   - time: 0.56666666
     functionName: isRolligOff
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.56666666
+    functionName: changeLayerToNormal
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

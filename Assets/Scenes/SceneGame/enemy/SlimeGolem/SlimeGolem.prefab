@@ -401,12 +401,12 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 48675301
-  m_SortingLayer: 2
+  m_SortingLayerID: 150608835
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 159787392, guid: 4be4d1b6f7abc1e419baf6fb7141cdb0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 2, y: 1}
@@ -508,6 +508,9 @@ MonoBehaviour:
   player: {fileID: 0}
   rigid: {fileID: 0}
   anim: {fileID: 0}
+  friendItemPrefab: {fileID: 7990694061593558116, guid: 1e227434e8035a848a1c5d29cc75f97c, type: 3}
+  friendType: 0
+  physicsCol: {fileID: 5741534716123929155}
   attackCol: {fileID: 0}
 --- !u!95 &8126466783345997786
 Animator:

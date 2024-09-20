@@ -124,7 +124,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0, y: 0.46}
+  m_AnchoredPosition: {x: -0, y: 0.309}
   m_SizeDelta: {x: 76.4235, y: 40.7208}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &8444426046354303507
@@ -147,7 +147,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: 1195358659
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &4724901259370636263
@@ -346,7 +346,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 48675301
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -742121212, guid: 2177742b3447d7e45a6599308ba1095e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -473,6 +473,9 @@ MonoBehaviour:
   player: {fileID: 0}
   rigid: {fileID: 0}
   anim: {fileID: 0}
+  friendItemPrefab: {fileID: 7990694061593558116, guid: 1e227434e8035a848a1c5d29cc75f97c, type: 3}
+  friendType: 0
+  physicsCol: {fileID: 7193771112688920959}
   attackCol: {fileID: 0}
 --- !u!1 &5592002729648740860
 GameObject:
@@ -660,7 +663,7 @@ RectTransform:
   m_GameObject: {fileID: 7757049125151838108}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.61, z: 0.61}
+  m_LocalScale: {x: 0.375, y: 0.5, z: 0.61}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1631619228117504558}

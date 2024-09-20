@@ -147,7 +147,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: 1195358659
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &4724901259370636263
@@ -219,8 +219,8 @@ Transform:
   m_GameObject: {fileID: 1781578248160550570}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.61, y: -0.53, z: 0}
-  m_LocalScale: {x: 1.3676206, y: 0.8021853, z: 1}
+  m_LocalPosition: {x: 1.2863, y: -0.53, z: 0}
+  m_LocalScale: {x: 2.0149155, y: 0.8021853, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8553618730464952703}
@@ -507,7 +507,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 48675301
-  m_SortingLayer: 2
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 947888170, guid: b6ed68fe1cead1a4dab132965576ebae, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -634,6 +634,9 @@ MonoBehaviour:
   player: {fileID: 0}
   rigid: {fileID: 0}
   anim: {fileID: 0}
+  friendItemPrefab: {fileID: 7990694061593558116, guid: 1e227434e8035a848a1c5d29cc75f97c, type: 3}
+  friendType: 0
+  physicsCol: {fileID: 7193771112688920959}
   attackCol1: {fileID: 0}
   attackCol2: {fileID: 0}
 --- !u!1 &5592002729648740860
@@ -665,8 +668,8 @@ Transform:
   m_GameObject: {fileID: 5592002729648740860}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.65, y: 0.0435, z: 0}
-  m_LocalScale: {x: 2.1340082, y: 1.9491477, z: 1}
+  m_LocalPosition: {x: 3.4489, y: 0.0435, z: 0}
+  m_LocalScale: {x: 1.7319611, y: 1.9491477, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8553618730464952703}
@@ -944,7 +947,7 @@ RectTransform:
   m_GameObject: {fileID: 7757049125151838108}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.61, z: 0.61}
+  m_LocalScale: {x: 0.75, y: 1, z: 0.61}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1631619228117504558}

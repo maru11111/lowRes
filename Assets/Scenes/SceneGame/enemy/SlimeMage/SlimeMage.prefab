@@ -251,7 +251,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.31654596, y: -0.7785289}
@@ -346,7 +346,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 48675301
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 1669761342, guid: 30aecbcf37114b041b1f35baec5dd645, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -452,7 +452,12 @@ MonoBehaviour:
   player: {fileID: 0}
   rigid: {fileID: 0}
   anim: {fileID: 0}
+  friendItemPrefab: {fileID: 7990694061593558116, guid: 1e227434e8035a848a1c5d29cc75f97c, type: 3}
+  friendType: 0
+  physicsCol: {fileID: 7193771112688920959}
   iceLancePrefab: {fileID: 3585564349455482612, guid: d7580a0babd50314fa18c72efa9c885f, type: 3}
+  iceLances: []
+  rancePower: 0
 --- !u!95 &162955972260687574
 Animator:
   serializedVersion: 5
@@ -623,7 +628,7 @@ RectTransform:
   m_GameObject: {fileID: 7757049125151838108}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.61, z: 0.61}
+  m_LocalScale: {x: 0.75, y: 1, z: 0.61}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1631619228117504558}
