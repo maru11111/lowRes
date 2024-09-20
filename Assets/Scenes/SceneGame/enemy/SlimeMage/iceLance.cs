@@ -7,7 +7,7 @@ public class iceLance : MonoBehaviour
     float timer=0;
     float attackTime=3;
     Vector3 dir;
-    float speed = 2.5f;
+    float speed = 5.5f;
     GameObject target;
     bool isEnemyAttack;
     int power=1;
@@ -22,10 +22,10 @@ public class iceLance : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        timer += Time.deltaTime;
+        
         if (target != null)
         {
-            timer += Time.deltaTime;
-
             //発射前
             if (timer <= attackTime)
             {
@@ -37,16 +37,31 @@ public class iceLance : MonoBehaviour
             //発射、発射後
             else
             {
-                transform.position += speed * dir * Time.deltaTime;
+                //単位ベクトルを求めてspeedをかける
+                transform.position += speed * (dir/Mathf.Sqrt(Mathf.Pow(dir.x,2)+ Mathf.Pow(dir.y, 2)+ Mathf.Pow(dir.z, 2))) * Time.deltaTime;
+            }
+        }
+        //ターゲットが死んでも飛ばす
+        else
+        {
+            Debug.Log("ターゲット死亡後");
+
+            if(attackTime<timer)
+            {
+                Debug.Log("ターゲット死亡後飛ばす");
+
+                //単位ベクトルを求めてspeedをかける
+                transform.position += speed * (dir / Mathf.Sqrt(Mathf.Pow(dir.x, 2) + Mathf.Pow(dir.y, 2) + Mathf.Pow(dir.z, 2))) * Time.deltaTime;
             }
         }
     }
     
-    public void setParam(GameObject obj, float t, bool isEnemy)
+    public void setParam(GameObject obj, float t, bool isEnemy, int rancePower)
     {
         target = obj;
         attackTime = t;
         isEnemyAttack = isEnemy;
+        power = rancePower;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
