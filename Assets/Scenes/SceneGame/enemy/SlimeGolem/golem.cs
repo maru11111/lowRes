@@ -13,10 +13,38 @@ public class golem : baseEnemy
     // Start is called before the first frame update
     override protected void Start()
     {
-        maxHp = 100;
-        power = 1;
-        attackInterval = 3;
+        if (isEnemy.Value)
+        {
+            maxHp = 300;
+            power = 10;
+        }
+        else
+        {
+            maxHp = 450;
+            power = 10;
+            //スキル補正
+            switch (SaveDataManager.data.friendStrengthenLevel)
+            {
+                case 0:
+                    //変化なし
+                    break;
 
+                case 1:
+                    maxHp += 50;
+                    break;
+
+                case 2:
+                    maxHp += 100;
+                    break;
+
+                case 3:
+                    maxHp += 150;
+                    break;
+            }
+        }
+
+        attackInterval = 3;
+        friendType = FriendType.golem;
         attackCol = GetComponentInChildren<collider>();
 
         if (isEnemy.Value)
@@ -61,6 +89,16 @@ public class golem : baseEnemy
         //攻撃用の当たり判定をオンに(アニメーションから呼び出す用
         attackCol.OffCollider();
     }
+
+    private void freezeXOn()
+    {
+        rigid.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+    }
+    private void freezeXOff()
+    {
+        rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
+    }
+
     public override void attack(GameObject obj, Vector2 effectPos)
     {
         //自身が敵であれば
@@ -108,12 +146,12 @@ public class golem : baseEnemy
 
     }
     
-    private void finishAttack()
+    public void finishAttack()
     {
         attacking = false;
 
-        //dynamicに戻す
-        rigid.bodyType = RigidbodyType2D.Dynamic;
+        ////dynamicに戻す
+        //rigid.bodyType = RigidbodyType2D.Dynamic;
   
     }
 
@@ -140,43 +178,67 @@ public class golem : baseEnemy
     {
         //眷属かどうかで変化しない
 
-        //攻撃状態に移行していないかつ床にいれば歩く
-        if (!moveAttack && flagOnFloor)
+        if (!attacking)
+        {
+            timer += Time.deltaTime;
+        }
+
+        if (!withinAttackRange && !attacking)
         {
             changeWalkMotion();
         }
-        //攻撃可能状態に移行していれば(城に着いていれば)
-        else if (moveAttack)
+        else
         {
-            timer += Time.deltaTime;
-
-            //攻撃中であれば(待機時間でなければ)
-            if (attacking)
+            if(attackInterval <= timer)
             {
-
-                //攻撃が終了していれば
-                if (anim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)
-                {
-                    //攻撃終了処理
-                    finishAttack();
-                    Debug.Log("攻撃終了");
-                }
+                changeAttackMotion();
+                attacking = true;
+                timer = 0;
             }
-            else
+            
+            if(!attacking)
             {
-                Debug.Log("待機");
                 changeStandMotion();
             }
-
-            //攻撃待機時間が終わっていれば
-            if (attackInterval < timer)
-            {
-                StartCoroutine(setAttack());
-
-                //タイマーリセット
-                timer -= attackInterval;
-            }
         }
+
+        ////攻撃状態に移行していないかつ床にいれば歩く
+        //if (!moveAttack && flagOnFloor)
+        //{
+        //    changeWalkMotion();
+        //}
+        ////攻撃可能状態に移行していれば(城に着いていれば)
+        //else if (moveAttack)
+        //{
+        //    timer += Time.deltaTime;
+
+        //    //攻撃中であれば(待機時間でなければ)
+        //    if (attacking)
+        //    {
+
+        //        //攻撃が終了していれば
+        //        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)
+        //        {
+        //            //攻撃終了処理
+        //            finishAttack();
+        //            Debug.Log("攻撃終了");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("待機");
+        //        changeStandMotion();
+        //    }
+
+        //    //攻撃待機時間が終わっていれば
+        //    if (attackInterval < timer)
+        //    {
+        //        StartCoroutine(setAttack());
+
+        //        //タイマーリセット
+        //        timer -= attackInterval;
+        //    }
+        //}
     }
 
      override protected void OnTriggerStay2D(Collider2D collision)
@@ -185,34 +247,71 @@ public class golem : baseEnemy
 
         //攻撃処理
         //自身が敵であれば
+        //if (isEnemy.Value)
+        //{
+        //    //当たったオブジェクトがプレイヤー城かつ攻撃状態に移行していなければ
+        //    if (collision.gameObject.CompareTag("PlayerCastle") && !moveAttack)
+        //    {
+        //        //攻撃移行初期処理
+        //        Debug.Log("プレイヤー城攻撃スタート");
+        //        moveAttack = true;
+        //        //はじめは即時攻撃
+        //        timer = attackInterval;
+        //        attacking = true;
+        //    }
+        //}
+        ////眷属であれば
+        //else if(!isEnemy.Value)
+        //{
+        //    //当たったオブジェクトが敵城かつ攻撃状態に移行していなければ
+        //    if (collision.gameObject.CompareTag("EnemyCastle") && !moveAttack)
+        //    {
+        //        //攻撃移行初期処理
+        //        Debug.Log("敵城攻撃スタート");
+        //        moveAttack = true;
+        //        //はじめは即時攻撃
+        //        timer = attackInterval;
+        //        attacking = true;
+        //    }
+        //}
+        //自身が敵の時
         if (isEnemy.Value)
         {
-            //当たったオブジェクトがプレイヤー城かつ攻撃状態に移行していなければ
-            if (collision.gameObject.CompareTag("PlayerCastle") && !moveAttack)
+            //城についたら
+            if (collision.gameObject.CompareTag("PlayerCastle"))
             {
-                //攻撃移行初期処理
-                Debug.Log("プレイヤー城攻撃スタート");
-                moveAttack = true;
-                //はじめは即時攻撃
-                timer = attackInterval;
-                attacking = true;
+                withinAttackRange = true;
             }
         }
-        //眷属であれば
-        else if(!isEnemy.Value)
+        //自身が眷属の時
+        else
         {
-            //当たったオブジェクトが敵城かつ攻撃状態に移行していなければ
-            if (collision.gameObject.CompareTag("EnemyCastle") && !moveAttack)
+            //城に着いたら
+            if (collision.gameObject.CompareTag("EnemyCastle"))
             {
-                //攻撃移行初期処理
-                Debug.Log("敵城攻撃スタート");
-                moveAttack = true;
-                //はじめは即時攻撃
-                timer = attackInterval;
-                attacking = true;
+                withinAttackRange = true;
             }
         }
-
     }
-
+    public void OnTriggerExit2D(Collider2D collision)
+    {
+        //自身が敵の時
+        if (isEnemy.Value)
+        {
+            //城から離れるかつ攻撃状態
+            if (collision.gameObject.CompareTag("PlayerCastle"))
+            {
+                withinAttackRange = false;
+            }
+        }
+        //自身が眷属の時
+        else
+        {
+            //城から離れるかつ攻撃状態
+            if (collision.gameObject.CompareTag("EnemyCastle"))
+            {
+                withinAttackRange = false;
+            }
+        }
+    }
 }
