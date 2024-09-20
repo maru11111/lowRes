@@ -8,6 +8,8 @@ public class friendItem : MonoBehaviour
     public FriendType friendType = FriendType.notExist;
     private friendItemManager friendItemManager;
     public bool takenSuccess = false;
+    public SpriteRenderer spriteRenderer;
+    public Animator anim;
 
     private void Start()
     {
@@ -17,6 +19,28 @@ public class friendItem : MonoBehaviour
     public void setParam(FriendType type)
     {
         friendType = type;
+        switch (type)
+        {
+            case FriendType.slime:
+                anim.Play("Slime");
+                break;
+
+            case FriendType.shield:
+                anim.Play("Shield");
+                break;
+
+            case FriendType.golem:
+                anim.Play("Golem");
+                break;
+
+            case FriendType.mage:
+                anim.Play("Mage");
+                break;
+
+            case FriendType.dragon:
+                anim.Play("Dragon");
+                break;
+        }
     }
 
     // Update is called once per frame
