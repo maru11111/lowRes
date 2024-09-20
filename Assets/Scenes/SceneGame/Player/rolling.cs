@@ -5,11 +5,13 @@ using UnityEngine;
 public class rolling : MonoBehaviour
 {
     public Collider2D playerCollider;
+    public GameObject playerColliderObj;
     public Animator anim;
     public SpriteRenderer spriteRenderer;
     public jump jumpScript;
     public takeDamage takeDamageScript;
     public pause pauseScript;
+    public player playerScript;
     public bool isRolling=false;
     public Rigidbody2D player;
     private float maxSpeed = 8f;
@@ -37,12 +39,22 @@ public class rolling : MonoBehaviour
         playerCollider.enabled = true;
     }
 
+    private void changeLayerToRolling()
+    {
+        playerColliderObj.layer = LayerMask.NameToLayer("PlayerPhysicsForRolling");
+    }
+
+    private void changeLayerToNormal()
+    {
+        playerColliderObj.layer = LayerMask.NameToLayer("PlayerPhysics");
+    }
+
     // Update is called once per frame
     void Update()
     {
         Debug.Log("isRolling" + isRolling);
 
-        if (!takeDamageScript.isStop && !jumpScript.isJumping && !pauseScript.isPause)
+        if (!takeDamageScript.isStop && !jumpScript.isJumping && !pauseScript.isPause && !playerScript.isDead && !playerScript.isGameSet && SaveDataManager.data.onRolling == 1)
         {
             if (!isRolling)
             {
