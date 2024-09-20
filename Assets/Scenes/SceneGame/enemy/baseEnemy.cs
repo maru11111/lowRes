@@ -28,6 +28,9 @@ public class baseEnemy : MonoBehaviour
     public player player;
     public Rigidbody2D rigid;
     public Animator anim;
+    public GameObject friendItemPrefab;
+    public FriendType friendType;
+    public Collider2D physicsCol;
 
     public static int enemyNum=0;
 
@@ -55,7 +58,7 @@ public class baseEnemy : MonoBehaviour
 
         //はじめは即時攻撃できるように
         timer = attackInterval;
-
+        
         if (isEnemy.Value)
         {
             var canvas = transform.Find("Canvas");
@@ -81,7 +84,6 @@ public class baseEnemy : MonoBehaviour
     {
         enemyNum -= 1;
         Debug.Log("敵と眷属の数の合計 : " + enemyNum);
-
     }
 
     // Update is called once per frame
@@ -89,6 +91,20 @@ public class baseEnemy : MonoBehaviour
     {
         defeat();
         move();
+
+        //changePhysicsIsTrigger();
+    }
+
+    public void changePhysicsIsTrigger()
+    {
+        if (flagOnFloor)
+        {
+            physicsCol.isTrigger = false;
+        }
+        else
+        {
+            physicsCol.isTrigger = true;
+        }
     }
 
     public void targetNullCheck()
@@ -98,21 +114,16 @@ public class baseEnemy : MonoBehaviour
             if (isEnemy.Value)
             {
                 target = playerCastle;
+                withinAttackRange = false;
             }
             else if (!isEnemy.Value)
             {
                 target = enemyCastle;
+                withinAttackRange = false;
             }
         }
     }
 
-    //ダメージを受けるためのメソッド
-    virtual public void damage(int damage, Vector2 effectPos)
-    {
-        currentHp -= damage;
-        //衝突点にダメージエフェクト
-        damageEffect.damageEffectPlay(effectPos);
-    }
     //ダメージを受けるためのメソッド
     virtual public void damage(int damage, Vector2 effectPos, GameObject obj)
     {
@@ -122,8 +133,27 @@ public class baseEnemy : MonoBehaviour
     }
 
     //死亡するためのメソッド
-    public void destroy()
+    virtual public void destroy()
     {
+        //自身が敵だった場合
+        if (isEnemy.Value)
+        {
+            //一定確率で眷属になる
+            int ProbabilityNum = Random.Range(0, 100);
+            Debug.Log(player.getProbability() + "以下であれば眷属 num : " + ProbabilityNum);
+            //probability(％)の確率で
+            if (ProbabilityNum < player.getProbability())
+            {
+                //眷属アイテム作成
+                GameObject item = Instantiate(friendItemPrefab, transform.position, Quaternion.identity);
+                item.GetComponent<friendItem>().setParam(friendType);
+            }
+            //はずれ
+            else
+            {
+                //眷属にならない
+            }
+        }
         Destroy(this.gameObject);
     }
 
@@ -168,7 +198,7 @@ public class baseEnemy : MonoBehaviour
                 if (baseEnemy != null)
                 {
                     Debug.Log(obj + "に" + power + "damage");
-                    baseEnemy.damage(power, effectPos);
+                    baseEnemy.damage(power, effectPos, this.gameObject);
                 }
             }
         }
@@ -186,7 +216,7 @@ public class baseEnemy : MonoBehaviour
                 var baseEnemy = obj.GetComponent<baseEnemy>();
                 if (baseEnemy != null)
                 {
-                    baseEnemy.damage(power, effectPos);
+                    baseEnemy.damage(power, effectPos, this.gameObject);
                 }
             }
         }
@@ -271,6 +301,7 @@ public class baseEnemy : MonoBehaviour
                 if (col.CompareTag("Player"))
                 {
                     target = playerCastle;
+                    withinAttackRange = false;
                 }
             }
             //眷属の場合
